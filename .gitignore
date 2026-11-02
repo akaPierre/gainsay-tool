@@ -1,0 +1,10 @@
+target/
+out/
+*.pcap
+*.pcapng
+!samples/**/*.pcap
+.idea/
+*.iml
+.vscode/
+dist/
+gainsay-runs/

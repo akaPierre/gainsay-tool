@@ -1,0 +1,16 @@
+Gainsay
+Copyright 2026 The Gainsay authors
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+The release packages bundle the following third-party software, each under its own license:
+
+- picocli 4.7.6 (Apache-2.0) - https://picocli.info
+- Jackson Databind and jackson-datatype-jsr310 2.17.2 (Apache-2.0) - https://github.com/FasterXML/jackson
+- pcap4j-core 1.8.2 (MIT) - https://github.com/kaitoy/pcap4j
+- Java Native Access (JNA), a pcap4j dependency (Apache-2.0, dual-licensed with LGPL-2.1) - https://github.com/java-native-access/jna
+- SLF4J API and slf4j-simple 1.7.36 (MIT) - https://www.slf4j.org
+- The standalone app image (gainsay.exe / bin/gainsay) includes a Java runtime built with jlink from
+  the OpenJDK (GPL-2.0 with the Classpath Exception) - https://openjdk.org
+
+Npcap and libpcap are not bundled. Npcap has its own license that restricts redistribution; users install it themselves.

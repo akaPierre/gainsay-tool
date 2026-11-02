@@ -1,0 +1,103 @@
+# Publishes a release when a version tag is pushed (for example v0.1.0):
+#   1. builds and tests the standalone Windows and Linux packages,
+#   2. signs gainsay.exe when Azure Trusted Signing is configured (see packaging/sign-windows.ps1),
+#   3. creates a draft GitHub release with the packages and SHA256SUMS.txt.
+# The release stays a draft so a person reviews it before it becomes public.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    env:
+      # Optional code signing. Leave these secrets unset to publish an unsigned build.
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      SIGNING_ENDPOINT: ${{ vars.SIGNING_ENDPOINT }}
+      SIGNING_ACCOUNT: ${{ vars.SIGNING_ACCOUNT }}
+      SIGNING_PROFILE: ${{ vars.SIGNING_PROFILE }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Check the tag matches the project version
+        shell: bash
+        run: |
+          version=$(mvn -q -B help:evaluate -Dexpression=project.version -DforceStdout)
+          test "v$version" = "$GITHUB_REF_NAME" || { echo "tag $GITHUB_REF_NAME does not match pom version $version"; exit 1; }
+
+      - name: Enable signing
+        if: env.AZURE_CLIENT_ID != ''
+        shell: pwsh
+        run: |
+          Install-Module TrustedSigning -Scope CurrentUser -Force
+          "GAINSAY_SIGN_SCRIPT=$env:GITHUB_WORKSPACE\packaging\sign-windows.ps1" >> $env:GITHUB_ENV
+
+      - name: Build the package
+        shell: pwsh
+        run: ./packaging/package.ps1
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: |
+            dist/*.zip
+            dist/SHA256SUMS-windows.txt
+
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Build the package
+        run: sh packaging/package.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: |
+            dist/*.tar.gz
+            dist/SHA256SUMS-linux.txt
+
+  release:
+    needs: [windows, linux]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Combine checksums
+        run: cat dist/SHA256SUMS-*.txt | sort -k2 > dist/SHA256SUMS.txt && rm dist/SHA256SUMS-*.txt
+
+      - name: Create a draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # The CHANGELOG section whose heading is this version, e.g. "## 0.2.0".
+          notes=$(awk -v h="## ${GITHUB_REF_NAME#v}" '$0==h{p=1;next} /^## /{p=0} p' CHANGELOG.md)
+          gh release create "$GITHUB_REF_NAME" dist/* --draft --title "Gainsay ${GITHUB_REF_NAME#v}" \
+            --notes "${notes:-See CHANGELOG.md.}"

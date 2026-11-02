@@ -1,0 +1,23 @@
+# Gainsay end-of-life / risky software list (local, user-editable; no online lookups).
+# Format: name contains | version prefix (optional) | reason
+# Matching is a case-insensitive substring test on the installed program's DisplayName,
+# plus an optional prefix test on DisplayVersion. Copy this file and pass it with --eol-list to customise.
+Adobe Flash Player | | Adobe ended Flash Player support on 2020-12-31; it has hundreds of known vulnerabilities.
+Microsoft Silverlight | | Silverlight reached end of support on 2021-10-12.
+QuickTime | | Apple no longer updates QuickTime for Windows (2016); known unpatched vulnerabilities.
+Adobe Reader XI | | Adobe Reader XI reached end of support on 2017-10-15.
+Adobe Acrobat Reader 2017 | | Acrobat 2017 reached end of support on 2022-06-06.
+Java(TM) 6 | | Java SE 6 public updates ended in 2013.
+Java 7 | | Java SE 7 public updates ended in 2015.
+Python 2. | | Python 2 reached end of life on 2020-01-01.
+Python 3.7 | | Python 3.7 reached end of life on 2023-06-27.
+Python 3.8 | | Python 3.8 reached end of life on 2024-10-07.
+Microsoft Office 2010 | | Office 2010 reached end of support on 2020-10-13.
+Microsoft Office Professional Plus 2013 | | Office 2013 reached end of support on 2023-04-11.
+Microsoft Office Professional Plus 2016 | | Office 2016 reached end of support on 2025-10-14.
+Microsoft Office Professional Plus 2019 | | Office 2019 reached end of support on 2025-10-14.
+Node.js | 14. | Node.js 14 reached end of life on 2023-04-30.
+Node.js | 16. | Node.js 16 reached end of life on 2023-09-11.
+PuTTY | 0.7 | PuTTY 0.68–0.80 are affected by CVE-2024-31497 (NIST P-521 key recovery); upgrade to 0.81 or later.
+PuTTY | 0.80 | PuTTY 0.68–0.80 are affected by CVE-2024-31497 (NIST P-521 key recovery); upgrade to 0.81 or later.
+WinRAR | 5. | WinRAR before 6.23 is affected by CVE-2023-38831 (code execution when opening a crafted archive).

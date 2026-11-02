@@ -1,0 +1,45 @@
+# Builds and runs every test on Windows and Linux for each push and pull request.
+# The tests need no admin rights, no Npcap and no network: host checks use recorded snapshots
+# and network analyzers use captures built in code.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Build and test
+        run: mvn -B package
+
+      - name: Smoke-test the demo audit
+        shell: bash
+        run: |
+          java -jar target/gainsay-*.jar audit --fixture samples/fixtures/host-hardened.json \
+            --pcap samples/demo.pcap --no-open --out target/ci-run
+          test -s target/ci-run/report.html
+
+      - name: Keep the test reports if something failed
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-${{ matrix.os }}
+          path: target/surefire-reports/

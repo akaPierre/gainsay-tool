@@ -1,0 +1,45 @@
+package dev.gainsay.net.decode;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Classifies TLS cipher suite code points (IANA registry) into weakness classes. Only weak classes are
+ * listed; anything else is treated as acceptable for posture purposes.
+ */
+public final class CipherSuites {
+
+    private static final Map<Integer, String> WEAK = new HashMap<>();
+
+    static {
+        // Order matters: a suite gets the first (worst) class it appears in.
+        add("NULL encryption", 0x0000, 0x0001, 0x0002, 0x002C, 0x002D, 0x002E, 0x003B, 0x00B0, 0x00B1, 0x00B4, 0x00B5,
+                0x00B8, 0x00B9, 0xC001, 0xC006, 0xC00B, 0xC010, 0xC015, 0xC039, 0xC03A, 0xC03B);
+        add("EXPORT-grade", 0x0003, 0x0006, 0x0008, 0x000B, 0x000E, 0x0011, 0x0014, 0x0017, 0x0019, 0x0026, 0x0027,
+                0x0028, 0x0029, 0x002A, 0x002B, 0x0062, 0x0063, 0x0064, 0x0065);
+        add("anonymous (no authentication)", 0x0018, 0x001A, 0x001B, 0x0034, 0x003A, 0x0046, 0x006C, 0x006D, 0x0089,
+                0x009B, 0x00A6, 0x00A7, 0x00BF, 0x00C5, 0xC016, 0xC017, 0xC018, 0xC019);
+        add("RC4", 0x0004, 0x0005, 0x0020, 0x0024, 0x008A, 0x008E, 0x0092, 0xC002, 0xC007, 0xC00C, 0xC011, 0xC033);
+        add("single DES", 0x0009, 0x000C, 0x000F, 0x0012, 0x0015, 0x001E, 0x0022);
+        add("3DES (Sweet32)", 0x000A, 0x000D, 0x0010, 0x0013, 0x0016, 0x001F, 0x0023, 0x008B, 0x008F, 0x0093, 0xC003,
+                0xC008, 0xC00D, 0xC012, 0xC01A, 0xC01B, 0xC01C, 0xC034);
+    }
+
+    private CipherSuites() {
+    }
+
+    private static void add(String cls, int... codes) {
+        for (int c : codes) {
+            WEAK.putIfAbsent(c, cls);
+        }
+    }
+
+    /** Weakness class, or null if the suite is not in a weak class. */
+    public static String weakness(int suite) {
+        return WEAK.get(suite);
+    }
+
+    public static String hex(int suite) {
+        return String.format("0x%04X", suite);
+    }
+}

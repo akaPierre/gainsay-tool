@@ -1,0 +1,30 @@
+# Gainsay Windows build lifecycle table (local, user-editable; no online lookups).
+# Format: build | caption contains (optional) | name | end of servicing (yyyy-mm-dd)
+# The first matching line wins, so list edition-specific lines before generic ones.
+# Dates are from Microsoft's lifecycle pages as of 2026; verify them at https://learn.microsoft.com/lifecycle
+# and pass an updated copy with --builds-list.
+26200 | Enterprise | Windows 11 25H2 Enterprise/Education | 2028-10-10
+26200 | Education | Windows 11 25H2 Enterprise/Education | 2028-10-10
+26200 | | Windows 11 25H2 Home/Pro | 2027-10-12
+26100 | Server | Windows Server 2025 | 2034-10-10
+26100 | IoT Enterprise LTSC | Windows 11 IoT Enterprise LTSC 2024 | 2034-10-10
+26100 | LTSC | Windows 11 Enterprise LTSC 2024 | 2029-10-09
+26100 | Enterprise | Windows 11 24H2 Enterprise/Education | 2027-10-12
+26100 | Education | Windows 11 24H2 Enterprise/Education | 2027-10-12
+26100 | | Windows 11 24H2 Home/Pro | 2026-10-13
+22631 | Enterprise | Windows 11 23H2 Enterprise/Education | 2026-11-10
+22631 | Education | Windows 11 23H2 Enterprise/Education | 2026-11-10
+22631 | | Windows 11 23H2 Home/Pro | 2025-11-11
+22621 | Enterprise | Windows 11 22H2 Enterprise/Education | 2025-10-14
+22621 | | Windows 11 22H2 Home/Pro | 2024-10-08
+22000 | | Windows 11 21H2 | 2024-10-08
+20348 | Server | Windows Server 2022 | 2031-10-14
+19045 | | Windows 10 22H2 (without ESU) | 2025-10-14
+19044 | IoT Enterprise LTSC | Windows 10 IoT Enterprise LTSC 2021 | 2032-01-13
+19044 | LTSC | Windows 10 Enterprise LTSC 2021 | 2027-01-12
+19044 | Enterprise | Windows 10 21H2 Enterprise/Education | 2024-06-11
+19044 | | Windows 10 21H2 Home/Pro | 2023-06-13
+17763 | Server | Windows Server 2019 | 2029-01-09
+17763 | LTSC | Windows 10 Enterprise LTSC 2019 | 2029-01-09
+14393 | Server | Windows Server 2016 | 2027-01-12
+14393 | LTSB | Windows 10 Enterprise LTSB 2016 | 2026-10-13
